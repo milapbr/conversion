@@ -43,32 +43,54 @@ def readCsv1(arq):
             quit()
         m+=1
 
+def stripChar(string, char):
+    while string.count(char * 2)>1:
+          string=string.replace(char * 2,char)
+    return string.strip(char)  
 def readCsv(arq):
     arqIn=open(arq,'r')
     arqOut=open(arq[:-4]+'_out.csv','w')
     m=0
     skip = True
+    i=0
     for line in arqIn: 
         line=line.strip()
         if skip:
             if not line.startswith('Rank,'):
                continue
             else:
+               #print line
+               line=stripChar(line,',')
+               #print line
+               #exit()
                skip = False
+               arqOut.writelines(line+',')
+               continue
+        line=stripChar(line,',')
+        '''
         while line.count(',,')>1:
             line=line.replace(',,',',')
+        
         line=line.strip(',')
+        '''
         if len(line)==0:
             continue
         if line.startswith('-') or line.startswith('*'):
             continue
+        line=line.replace(',*,',',')
         print line
-        arqOut.writelines(line+'\n')
+        if i%2==0:
+           arqOut.writelines(line+'\n')
+        else:
+           arqOut.writelines(line+',')
+        i+=1
         '''
         if m>5:
             quit()
         m+=1
         '''
 
-#readCsv('C:\work\prodConv\P46\csv-07-2018 july even numbers.csv')
-readCsv('C:\work\prodConv\P46\csv-07-2018 july even numbers.csv')
+#readCsv('C:\work\conversion\P46\csv-07-2018 july even numbers.csv')
+#readCsv('C:\work\conversion\P46\csv-07-2018 july even numbers.csv')
+#readCsv('work-csf-08-2018 August even report.csv')
+readCsv('C:\work\conversion\P46\work-csv-08-2018 August odd report.csv')
